@@ -10,7 +10,7 @@
     --bg: #0f172a; --surface: #1e293b; --surface2: #273549;
     --accent: #3b82f6; --red: #ef4444; --green: #22c55e; --gray: #94a3b8;
     --text: #e2e8f0; --text2: #94a3b8; --border: #334155;
-    --base: #3b82f6; --bear: #ef4444; --bull: #22c55e;
+    --base: #3b82f6; --bull: #22c55e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', 'Yu Gothic', sans-serif; min-height: 100vh; }
@@ -19,33 +19,32 @@
   header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.05em; }
   header p  { font-size: 13px; color: var(--text2); margin-top: 4px; }
   .container { max-width: 1600px; margin: 0 auto; padding: 24px 32px; }
-  /* シナリオ切り替え */
   .scenario-bar { display: flex; gap: 8px; margin-bottom: 24px; align-items: center; }
   .scenario-bar label { font-size: 13px; color: var(--text2); margin-right: 8px; }
   .sc-btn { padding: 8px 20px; border-radius: 6px; border: 2px solid transparent;
-             cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; }
-  .sc-btn[data-sc="base"]    { border-color: var(--base);  color: var(--base);  background: transparent; }
-  .sc-btn[data-sc="bearish"] { border-color: var(--bear);  color: var(--bear);  background: transparent; }
-  .sc-btn[data-sc="bullish"] { border-color: var(--bull);  color: var(--bull);  background: transparent; }
-  .sc-btn.active[data-sc="base"]    { background: var(--base);  color: #fff; }
-  .sc-btn.active[data-sc="bearish"] { background: var(--bear);  color: #fff; }
-  .sc-btn.active[data-sc="bullish"] { background: var(--bull);  color: #fff; }
-  /* カード */
+             cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; background: transparent; }
+  .sc-btn[data-sc="base"]    { border-color: var(--base); color: var(--base); }
+  .sc-btn[data-sc="bullish"] { border-color: var(--bull); color: var(--bull); }
+  .sc-btn.active[data-sc="base"]    { background: var(--base); color: #fff; }
+  .sc-btn.active[data-sc="bullish"] { background: var(--bull); color: #fff; }
   .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
   .card { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
   .card-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
   .card-value { font-size: 28px; font-weight: 700; }
   .card-sub   { font-size: 12px; color: var(--text2); margin-top: 4px; }
-  .up   { color: var(--green); } .down { color: var(--red); }
-  /* グラフエリア */
+  .up { color: var(--green); } .down { color: var(--red); }
   .charts { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 24px; }
   .chart-box { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
   .chart-box h3 { font-size: 14px; font-weight: 600; margin-bottom: 14px; color: var(--text); }
-  .chart-box canvas { max-height: 280px; }
+  .chart-box canvas { max-height: 300px; }
+  /* チャート凡例 */
+  .chart-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; font-size: 12px; color: var(--text2); align-items: center; }
+  .legend-dot { display: inline-block; width: 24px; height: 3px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+  .legend-sep { width: 2px; height: 14px; background: rgba(245,158,11,.6); display: inline-block; margin: 0 6px; vertical-align: middle; }
   /* テーブル */
   .table-wrap { background: var(--surface); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
   .table-header { display: flex; justify-content: space-between; align-items: center;
-                   padding: 16px 20px; border-bottom: 1px solid var(--border); }
+                   padding: 16px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
   .table-header h3 { font-size: 14px; font-weight: 600; }
   .search-box { padding: 7px 12px; border-radius: 6px; border: 1px solid var(--border);
                  background: var(--surface2); color: var(--text); font-size: 13px; width: 200px; }
@@ -55,8 +54,12 @@
         border-bottom: 1px solid var(--border); white-space: nowrap; }
   th.left { text-align: left; }
   th:hover { color: var(--accent); }
+  th.hist-col { color: #fcd34d; }
+  th.fcast-col { color: #93c5fd; }
   td { padding: 9px 14px; font-size: 13px; text-align: right; border-bottom: 1px solid #1e293b; white-space: nowrap; }
   td.left { text-align: left; }
+  td.hist-val { color: #fcd34d; }
+  td.fcast-val { color: #93c5fd; }
   tr:hover td { background: var(--surface2); }
   .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; text-align: center; }
   .type-A { background: #14532d; color: #86efac; border: 1px solid #22c55e; }
@@ -65,14 +68,13 @@
   .type-N { background: #713f12; color: #fde68a; border: 1px solid #eab308; }
   .positive { color: var(--green); } .negative { color: var(--red); }
   /* ヒートマップ */
-  .heatmap { display: grid; gap: 4px; padding: 4px; }
+  .heatmap { display: grid; gap: 4px; padding: 4px; overflow-x: auto; }
   .hm-row { display: flex; gap: 4px; align-items: center; }
-  .hm-label { font-size: 11px; color: var(--text2); width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .hm-cell { width: 52px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
-              font-size: 10px; font-weight: 600; color: #fff; }
-  .hm-header { display: flex; gap: 4px; margin-left: 124px; }
-  .hm-header span { width: 52px; font-size: 10px; color: var(--text2); text-align: center; }
-
+  .hm-label { font-size: 11px; color: var(--text2); width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 0; }
+  .hm-cell { width: 44px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+              font-size: 10px; font-weight: 600; color: #fff; flex-shrink: 0; }
+  .hm-sep { width: 2px; height: 26px; background: rgba(245,158,11,.6); border-radius: 2px; flex-shrink: 0; margin: 0 2px; }
+  /* 根拠ボックス */
   .basis-box { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--border); margin-top: 24px; }
   .basis-box h3 { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
   .basis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
@@ -81,7 +83,6 @@
   .basis-item p { font-size: 12px; color: var(--text2); line-height: 1.8; }
   .basis-footnote { margin-top: 14px; font-size: 12px; color: var(--text2); line-height: 1.8; }
   footer { text-align: center; padding: 24px; font-size: 12px; color: var(--text2); border-top: 1px solid var(--border); margin-top: 32px; }
-
   /* パスワードゲート */
   #app { display: none; }
   .pw-gate {
@@ -110,10 +111,10 @@
     border-radius: 10px; padding: 12px 18px; font-size: 14px; font-weight: 700;
   }
   .pw-error { min-height: 18px; margin-top: 10px; font-size: 12px; color: #fca5a5; }
-
 </style>
 </head>
 <body>
+
 <div id="pw-gate" class="pw-gate">
   <div class="pw-card">
     <h2>パスワード入力</h2>
@@ -125,16 +126,17 @@
     <div id="pw-error" class="pw-error"></div>
   </div>
 </div>
+
 <div id="app">
 <header>
   <h1>2030年度 売上予測ダッシュボード</h1>
-  <p>2025年度着地見込みを起点とした、全68店舗・2026〜2030年度の売上予測</p>
+  <p>2020〜2024年度 実績 ｜ 2025年度 着地見込み ｜ 2026〜2030年度 予測（全68店舗）</p>
 </header>
 
 <div class="container">
 
   <div class="scenario-bar">
-    <label>シナリオ選択：</label>
+    <label>予測シナリオ：</label>
     <button class="sc-btn active" data-sc="base"    onclick="setScenario('base')">施策なしケース</button>
     <button class="sc-btn"        data-sc="bullish" onclick="setScenario('bullish')">上振れケース</button>
   </div>
@@ -151,13 +153,20 @@
   <div class="charts">
     <div class="chart-box">
       <h3>全店合計 売上推移（億円）</h3>
+      <div class="chart-legend">
+        <span><span class="legend-dot" style="background:#f59e0b;"></span>過去実績（2020〜2024）</span>
+        <span class="legend-sep"></span>
+        <span><span class="legend-dot" style="background:#94a3b8;"></span>2025年度見込</span>
+        <span><span class="legend-dot" style="background:#3b82f6;"></span>施策なし</span>
+        <span><span class="legend-dot" style="background:#22c55e;border-top:2px dashed;"></span>上振れ</span>
+      </div>
       <canvas id="salesChart"></canvas>
     </div>
-</div>
+  </div>
 
   <div class="table-wrap" style="margin-bottom:24px;">
     <div class="table-header">
-      <h3>店舗別 売上予測（2025〜2030年度）</h3>
+      <h3>店舗別 売上推移（2020〜2030年度）</h3>
       <input class="search-box" type="text" id="store-search" placeholder="店舗名で絞り込み" oninput="filterStores()">
     </div>
     <div style="overflow-x:auto;">
@@ -167,14 +176,18 @@
             <th class="left" onclick="sortTable(0)">店舗名 ▲▼</th>
             <th onclick="sortTable(1)">分類</th>
             <th onclick="sortTable(2)">人口推移<br>(30/25)</th>
-            <th onclick="sortTable(3)">2025(実見)<br>億円</th>
-            <th onclick="sortTable(4)">2026<br>億円</th>
-            <th onclick="sortTable(5)">2027<br>億円</th>
-            <th onclick="sortTable(6)">2028<br>億円</th>
-            <th onclick="sortTable(7)">2029<br>億円</th>
-            <th onclick="sortTable(8)">2030<br>億円</th>
-            <th onclick="sortTable(9)">対2025比<br>(2030)</th>
-            
+            <th class="hist-col" onclick="sortTable(3)">2020<br>億円</th>
+            <th class="hist-col" onclick="sortTable(4)">2021<br>億円</th>
+            <th class="hist-col" onclick="sortTable(5)">2022<br>億円</th>
+            <th class="hist-col" onclick="sortTable(6)">2023<br>億円</th>
+            <th class="hist-col" onclick="sortTable(7)">2024<br>億円</th>
+            <th onclick="sortTable(8)">2025(実見)<br>億円</th>
+            <th class="fcast-col" onclick="sortTable(9)">2026<br>億円</th>
+            <th class="fcast-col" onclick="sortTable(10)">2027<br>億円</th>
+            <th class="fcast-col" onclick="sortTable(11)">2028<br>億円</th>
+            <th class="fcast-col" onclick="sortTable(12)">2029<br>億円</th>
+            <th class="fcast-col" onclick="sortTable(13)">2030<br>億円</th>
+            <th onclick="sortTable(14)">対2025比<br>(2030)</th>
           </tr>
         </thead>
         <tbody id="store-tbody"></tbody>
@@ -183,14 +196,17 @@
   </div>
 
   <div class="chart-box" id="heatmap-box">
-    <h3 id="hm-title">売上ヒートマップ（2025〜2030年度）</h3>
+    <h3 id="hm-title">売上ヒートマップ（2020〜2030年度）</h3>
     <div id="heatmap-container"></div>
   </div>
-
 
   <div class="basis-box" id="basis-box">
     <h3>数値判断に使った基準と考え方</h3>
     <div class="basis-grid">
+      <div class="basis-item">
+        <h4>過去実績（2020〜2024年度）</h4>
+        <p>Excelの年間収支推移データから補正売上・営業利益を店舗別・年度別に集計。年度は7月始まり（7〜6月）で集計。黄色列が実績値。</p>
+      </div>
       <div class="basis-item">
         <h4>起点売上 4,651億円</h4>
         <p>2025年度売上見込の全店合計を起点に設定。過去の回復トレンドをそのまま伸ばすのではなく、足元実績ベースで2030年度を試算しています。</p>
@@ -202,10 +218,6 @@
       <div class="basis-item">
         <h4>人口要因 年▲0.3％〜▲1.2％</h4>
         <p>全店一律ではなく、各市区町村の人口推移と高齢化進行度から店舗ごとに補正。都市部は影響を小さく、人口減少が進む地域は影響を大きく見ています。</p>
-      </div>
-      <div class="basis-item">
-        <h4>店舗分類の考え方</h4>
-        <p>競合影響大・地域安定・下落傾向・新店の4分類で商圏環境を整理。競合状況や既存の売上推移を踏まえ、シェア獲得余地や下落リスクの差を織り込んでいます。</p>
       </div>
       <div class="basis-item">
         <h4>施策なしケース</h4>
@@ -225,13 +237,12 @@
 </div>
 
 <footer>
-  生成日時：2026年3月18日　｜　v4予測モデル：自然市場減（全店共通） ＋ 人口減要因(市町村別) ＋ 商圏シェア変動（店舗分類） ＋ 営業施策効果
+  生成日時：2026年3月　｜　実績：年間収支推移_2020-2025年度.xlsx（補正売上）　｜　予測：v4予測モデル（自然市場減＋人口要因＋商圏シェア変動）
 </footer>
 
 </div>
 
 <script>
-
 const DASHBOARD_PASSWORD = '7777';
 function unlockDashboard() {
   const input = document.getElementById('pw-input');
@@ -247,6 +258,7 @@ function unlockDashboard() {
     input.focus();
   }
 }
+
 const RAW = {
   "stores": [
     "沼田店",
@@ -398,6 +410,36 @@ const RAW = {
             "sales": 5188625963,
             "profit": 297548831
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5528386700,
+            "profit": 505024989
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4838914600,
+            "profit": 385272872
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4928392800,
+            "profit": 339631712
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4998225500,
+            "profit": 303340120
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5459657800,
+            "profit": 315512766
+          }
         }
       }
     },
@@ -479,6 +521,36 @@ const RAW = {
           "bullish": {
             "sales": 5142726933,
             "profit": 241113922
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4416708980,
+            "profit": 360991214
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3779720120,
+            "profit": 224394148
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4004505160,
+            "profit": 117256033
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4567335160,
+            "profit": 156391921
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5292024380,
+            "profit": 244440054
           }
         }
       }
@@ -562,6 +634,36 @@ const RAW = {
             "sales": 1815347975,
             "profit": 26467297
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 1675638348,
+            "profit": 112245491
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 1468112900,
+            "profit": 76477239
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 1581228300,
+            "profit": 30921028
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 1747151700,
+            "profit": 30788974
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 1833496940,
+            "profit": 33493303
+          }
         }
       }
     },
@@ -643,6 +745,36 @@ const RAW = {
           "bullish": {
             "sales": 5108862306,
             "profit": 273003124
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4291975886,
+            "profit": 243581853
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4033803600,
+            "profit": 223560976
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4502959900,
+            "profit": 254895540
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4620863400,
+            "profit": 235223935
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 4901500100,
+            "profit": 219079283
           }
         }
       }
@@ -726,6 +858,36 @@ const RAW = {
             "sales": 9333882964,
             "profit": 393402391
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 6064908980,
+            "profit": 85088468
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6495132100,
+            "profit": 203923881
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 7351242440,
+            "profit": 239084753
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 8065371820,
+            "profit": 344873795
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 8477176260,
+            "profit": 423217626
+          }
         }
       }
     },
@@ -807,6 +969,36 @@ const RAW = {
           "bullish": {
             "sales": 8939531825,
             "profit": 284353640
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5966131540,
+            "profit": 249562199
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6300337920,
+            "profit": 298002031
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 7242102420,
+            "profit": 414632066
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 7913719370,
+            "profit": 416673400
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 8240571950,
+            "profit": 387776239
           }
         }
       }
@@ -890,6 +1082,36 @@ const RAW = {
             "sales": 4810670628,
             "profit": 197965045
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4052858100,
+            "profit": 178568324
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4179167700,
+            "profit": 196026944
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4498505400,
+            "profit": 212533830
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4839527600,
+            "profit": 224580837
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5051911400,
+            "profit": 212537593
+          }
         }
       }
     },
@@ -971,6 +1193,36 @@ const RAW = {
           "bullish": {
             "sales": 5287987248,
             "profit": 186898610
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 3402347500,
+            "profit": 141952541
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3457648500,
+            "profit": 119139528
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4113884700,
+            "profit": 196731485
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4533854400,
+            "profit": 245676047
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 4616096100,
+            "profit": 167057773
           }
         }
       }
@@ -1054,6 +1306,18 @@ const RAW = {
             "sales": 13927129841,
             "profit": 456337794
           }
+        },
+        "2023": {
+          "actual": {
+            "sales": 11913525272,
+            "profit": 347247406
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 13266546428,
+            "profit": 393035087
+          }
         }
       }
     },
@@ -1135,6 +1399,36 @@ const RAW = {
           "bullish": {
             "sales": 6049861486,
             "profit": 81303835
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4776292580,
+            "profit": 231303492
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4341911540,
+            "profit": 131436697
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4977165640,
+            "profit": 164889278
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5153011240,
+            "profit": 107354701
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5437677920,
+            "profit": 122757858
           }
         }
       }
@@ -1218,6 +1512,36 @@ const RAW = {
             "sales": 7659801468,
             "profit": 430160552
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 6189515600,
+            "profit": 345232104
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6473700000,
+            "profit": 375961862
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 7342875400,
+            "profit": 384875977
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 7414318800,
+            "profit": 437966705
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 7874833400,
+            "profit": 484189420
+          }
         }
       }
     },
@@ -1299,6 +1623,36 @@ const RAW = {
           "bullish": {
             "sales": 4798739954,
             "profit": -31704540
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 3329498549,
+            "profit": 126448322
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3246185541,
+            "profit": 93229066
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 3294572984,
+            "profit": 83873461
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 3565224960,
+            "profit": 98899936
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 3651807615,
+            "profit": 81970174
           }
         }
       }
@@ -1382,6 +1736,36 @@ const RAW = {
             "sales": 7217461372,
             "profit": 210680298
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 6265217700,
+            "profit": 262110591
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5930550600,
+            "profit": 161921627
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5958341500,
+            "profit": 293187858
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5857071700,
+            "profit": 229159784
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6143183700,
+            "profit": 230011852
+          }
         }
       }
     },
@@ -1463,6 +1847,36 @@ const RAW = {
           "bullish": {
             "sales": 6527103986,
             "profit": 194401132
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4949252832,
+            "profit": 172612676
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5088425400,
+            "profit": 244087371
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5678798200,
+            "profit": 234293499
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5443741700,
+            "profit": 202477771
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5972192600,
+            "profit": 192709880
           }
         }
       }
@@ -1546,6 +1960,36 @@ const RAW = {
             "sales": 7820238048,
             "profit": 221568896
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5734037600,
+            "profit": 256717853
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6028911400,
+            "profit": 230702963
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6467134300,
+            "profit": 252930437
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6553631700,
+            "profit": 224609880
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 7232257900,
+            "profit": 229636877
+          }
         }
       }
     },
@@ -1627,6 +2071,36 @@ const RAW = {
           "bullish": {
             "sales": 8477902449,
             "profit": -239418915
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5593443994,
+            "profit": 68603884
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5692255940,
+            "profit": 73339606
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6226333340,
+            "profit": 114317256
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6292174060,
+            "profit": 47953426
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6906654900,
+            "profit": 57832812
           }
         }
       }
@@ -1710,6 +2184,36 @@ const RAW = {
             "sales": 7350305882,
             "profit": -106653448
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4642342860,
+            "profit": -780339683
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5302469500,
+            "profit": -216583903
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4943539800,
+            "profit": -276051016
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5416093600,
+            "profit": -86586629
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6619370700,
+            "profit": -167879332
+          }
         }
       }
     },
@@ -1791,6 +2295,30 @@ const RAW = {
           "bullish": {
             "sales": 5272723696,
             "profit": 164122397
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5524577020,
+            "profit": 109276370
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5499716944,
+            "profit": 4735062
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5733781026,
+            "profit": 161128005
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6267139391,
+            "profit": 272465300
           }
         }
       }
@@ -1874,6 +2402,36 @@ const RAW = {
             "sales": 11608374327,
             "profit": 721591554
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 7870404500,
+            "profit": 653152675
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 8160515100,
+            "profit": 703137448
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 8373681500,
+            "profit": 681124269
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 9101571000,
+            "profit": 544861410
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 10892007900,
+            "profit": 598746640
+          }
         }
       }
     },
@@ -1955,6 +2513,36 @@ const RAW = {
           "bullish": {
             "sales": 9108148928,
             "profit": 52968108
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 7408599800,
+            "profit": 18960566
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 7624345700,
+            "profit": 181931852
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 7759490300,
+            "profit": 66244164
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 8094940800,
+            "profit": 62273355
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 8660119500,
+            "profit": 56471195
           }
         }
       }
@@ -2038,6 +2626,36 @@ const RAW = {
             "sales": 6991284273,
             "profit": 28721403
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4285276620,
+            "profit": 109228387
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4272734260,
+            "profit": 35742972
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4797037780,
+            "profit": 42659714
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5280477800,
+            "profit": 97429362
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5817615880,
+            "profit": 37145827
+          }
         }
       }
     },
@@ -2119,6 +2737,36 @@ const RAW = {
           "bullish": {
             "sales": 6837351188,
             "profit": 65209778
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5352476600,
+            "profit": 259099534
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4858808900,
+            "profit": 118605264
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4750164000,
+            "profit": 120624616
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5455633500,
+            "profit": 129381163
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5918904400,
+            "profit": 88607965
           }
         }
       }
@@ -2202,6 +2850,36 @@ const RAW = {
             "sales": 11032251022,
             "profit": 420778115
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 7229016300,
+            "profit": 202932448
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 8265370200,
+            "profit": 324728087
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 8988644800,
+            "profit": 346640631
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 9434137300,
+            "profit": 384449415
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 9799665900,
+            "profit": 364053092
+          }
         }
       }
     },
@@ -2283,6 +2961,36 @@ const RAW = {
           "bullish": {
             "sales": 10143696306,
             "profit": 744445172
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 7599475500,
+            "profit": 689948161
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 7780152400,
+            "profit": 655194747
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 8326318100,
+            "profit": 678415046
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 9328509800,
+            "profit": 706562285
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 10500669900,
+            "profit": 788197270
           }
         }
       }
@@ -2366,6 +3074,36 @@ const RAW = {
             "sales": 5361358406,
             "profit": 40718709
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4134742360,
+            "profit": 69195532
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3951312820,
+            "profit": 2535252
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4223159600,
+            "profit": 16467889
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4338587720,
+            "profit": 94197356
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 4634153900,
+            "profit": 66563894
+          }
         }
       }
     },
@@ -2447,6 +3185,18 @@ const RAW = {
           "bullish": {
             "sales": 4015860078,
             "profit": -31752540
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4942975800,
+            "profit": -121670868
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 4270899040,
+            "profit": -40271289
           }
         }
       }
@@ -2530,6 +3280,36 @@ const RAW = {
             "sales": 6339147615,
             "profit": 7186896
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5489385800,
+            "profit": 135165682
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5107252400,
+            "profit": 45213433
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5336550100,
+            "profit": 37959209
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5697834900,
+            "profit": 74021333
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5825461000,
+            "profit": 63794918
+          }
         }
       }
     },
@@ -2611,6 +3391,36 @@ const RAW = {
           "bullish": {
             "sales": 9032249578,
             "profit": 246536226
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4730786000,
+            "profit": 54754060
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5688721300,
+            "profit": 17209814
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6997980600,
+            "profit": 233904618
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 7456954800,
+            "profit": 269427141
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 7984846000,
+            "profit": 293003794
           }
         }
       }
@@ -2694,6 +3504,36 @@ const RAW = {
             "sales": 7263153816,
             "profit": -15495075
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4979056400,
+            "profit": 210094449
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5774986800,
+            "profit": 265706432
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6517102000,
+            "profit": 296973676
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6911422400,
+            "profit": 328332841
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 7543908100,
+            "profit": -6233528
+          }
         }
       }
     },
@@ -2775,6 +3615,36 @@ const RAW = {
           "bullish": {
             "sales": 2977874646,
             "profit": -67087226
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 2962273746,
+            "profit": 16075950
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 2755974920,
+            "profit": -199719189
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 3370702705,
+            "profit": 5865809
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 3291206890,
+            "profit": 13620639
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 3154407154,
+            "profit": -7228261
           }
         }
       }
@@ -2858,6 +3728,36 @@ const RAW = {
             "sales": 6266333550,
             "profit": 92849433
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 3744159600,
+            "profit": 58432374
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3827076500,
+            "profit": 84969095
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4450607600,
+            "profit": 122536769
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4786790900,
+            "profit": 110345237
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 4926548600,
+            "profit": 103605209
+          }
         }
       }
     },
@@ -2939,6 +3839,36 @@ const RAW = {
           "bullish": {
             "sales": 6997260378,
             "profit": 213672162
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4808606050,
+            "profit": 187507673
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5637514050,
+            "profit": 192634293
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6212171500,
+            "profit": 200270266
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6190659000,
+            "profit": 163886794
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6574969050,
+            "profit": 183073385
           }
         }
       }
@@ -3022,6 +3952,36 @@ const RAW = {
             "sales": 7262101944,
             "profit": 248219521
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4747016350,
+            "profit": 84105062
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6189190463,
+            "profit": 166082164
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6605277200,
+            "profit": 162790322
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6794964750,
+            "profit": 166969570
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6811334250,
+            "profit": 199999573
+          }
         }
       }
     },
@@ -3103,6 +4063,36 @@ const RAW = {
           "bullish": {
             "sales": 4925882611,
             "profit": -151224359
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5201053612,
+            "profit": 179409732
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5120917315,
+            "profit": -491519213
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5119758689,
+            "profit": -227524391
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5965238005,
+            "profit": -213670958
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5653309041,
+            "profit": -102595259
           }
         }
       }
@@ -3186,6 +4176,36 @@ const RAW = {
             "sales": 5090093578,
             "profit": 262985071
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4340560582,
+            "profit": 179059002
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3835247054,
+            "profit": 168664660
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4571460652,
+            "profit": 200745856
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5465433747,
+            "profit": 223857953
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5614015740,
+            "profit": 275061887
+          }
         }
       }
     },
@@ -3267,6 +4287,36 @@ const RAW = {
           "bullish": {
             "sales": 4273698677,
             "profit": -14379200
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 3079952436,
+            "profit": 6404285
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 2513795127,
+            "profit": 45125625
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 2833188521,
+            "profit": 76027813
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 3210209714,
+            "profit": -56253017
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 4332349630,
+            "profit": -22614174
           }
         }
       }
@@ -3350,6 +4400,30 @@ const RAW = {
             "sales": 13695868177,
             "profit": 647822583
           }
+        },
+        "2021": {
+          "actual": {
+            "sales": 10185447532,
+            "profit": -350737537
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 11255665917,
+            "profit": 223529565
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 12032563735,
+            "profit": 427121430
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 12883959368,
+            "profit": 575691315
+          }
         }
       }
     },
@@ -3431,6 +4505,36 @@ const RAW = {
           "bullish": {
             "sales": 5505176258,
             "profit": 159421288
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5407763220,
+            "profit": -8399597
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 7181102900,
+            "profit": -218700189
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6992534200,
+            "profit": 78044085
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 7129167500,
+            "profit": 185252455
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6594401600,
+            "profit": 169703415
           }
         }
       }
@@ -3514,6 +4618,36 @@ const RAW = {
             "sales": 8563818082,
             "profit": 306675714
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 6201339400,
+            "profit": 164796048
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 7043982600,
+            "profit": 179716839
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 7445501800,
+            "profit": 213169096
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 7906461900,
+            "profit": 264972174
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 8067560800,
+            "profit": 276471206
+          }
         }
       }
     },
@@ -3595,6 +4729,36 @@ const RAW = {
           "bullish": {
             "sales": 2975235437,
             "profit": -20939691
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 2987658997,
+            "profit": -8807390
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 2941407831,
+            "profit": -34138504
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 3005188226,
+            "profit": -26898332
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 2825465013,
+            "profit": 8937194
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 3057318632,
+            "profit": -64951014
           }
         }
       }
@@ -3678,6 +4842,36 @@ const RAW = {
             "sales": 6219015118,
             "profit": 124044989
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 3864342038,
+            "profit": 79463462
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4484793820,
+            "profit": 130149981
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5025568512,
+            "profit": 174227823
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4864203981,
+            "profit": 87135792
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5237945288,
+            "profit": 115363005
+          }
         }
       }
     },
@@ -3759,6 +4953,24 @@ const RAW = {
           "bullish": {
             "sales": 13414830080,
             "profit": 45242400
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 10149010900,
+            "profit": 208163489
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 10079781100,
+            "profit": 221305777
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 11059675900,
+            "profit": -84778660
           }
         }
       }
@@ -3842,6 +5054,30 @@ const RAW = {
             "sales": 8228503920,
             "profit": 328983957
           }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3230506100,
+            "profit": -191532970
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5107616400,
+            "profit": -339985118
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6892643200,
+            "profit": 207832223
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 8086516000,
+            "profit": 305917584
+          }
         }
       }
     },
@@ -3923,6 +5159,36 @@ const RAW = {
           "bullish": {
             "sales": 8895548173,
             "profit": 398022910
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 6321682000,
+            "profit": -91971568
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6546800200,
+            "profit": -149339188
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 8032187900,
+            "profit": 145900517
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 9323915500,
+            "profit": 432286717
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 9691851000,
+            "profit": 435166957
           }
         }
       }
@@ -4006,6 +5272,36 @@ const RAW = {
             "sales": 9693141343,
             "profit": 392351172
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 6869771900,
+            "profit": 324647187
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6867382800,
+            "profit": 262666921
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 8275887900,
+            "profit": 385250213
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 8519067200,
+            "profit": 494566502
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 8386670300,
+            "profit": 444438402
+          }
         }
       }
     },
@@ -4087,6 +5383,36 @@ const RAW = {
           "bullish": {
             "sales": 12470514668,
             "profit": 506165978
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 8341386100,
+            "profit": 472660662
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 9597010600,
+            "profit": 635254756
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 9841923800,
+            "profit": 622827147
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 10248452900,
+            "profit": 586451141
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 10976415700,
+            "profit": 647150622
           }
         }
       }
@@ -4170,6 +5496,36 @@ const RAW = {
             "sales": 8856969823,
             "profit": 684493875
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4628430100,
+            "profit": 350082592
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5198262100,
+            "profit": 340151254
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6840329000,
+            "profit": 439207004
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 7497897600,
+            "profit": 530268127
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 8010987800,
+            "profit": 658583847
+          }
         }
       }
     },
@@ -4251,6 +5607,36 @@ const RAW = {
           "bullish": {
             "sales": 4694603907,
             "profit": 74315128
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 2984199140,
+            "profit": 136370964
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 2876329240,
+            "profit": 71142259
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 3249137960,
+            "profit": 127729097
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 3375741040,
+            "profit": 40124428
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 3740744260,
+            "profit": 7743329
           }
         }
       }
@@ -4334,6 +5720,24 @@ const RAW = {
             "sales": 6298084429,
             "profit": 37142396
           }
+        },
+        "2022": {
+          "actual": {
+            "sales": 9451225100,
+            "profit": -1894364289
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 7125539800,
+            "profit": 22604232
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 7018836800,
+            "profit": 104161658
+          }
         }
       }
     },
@@ -4415,6 +5819,24 @@ const RAW = {
           "bullish": {
             "sales": 5173814844,
             "profit": -20643290
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5796446084,
+            "profit": -1150300654
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4158096830,
+            "profit": -13326474
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 3963546200,
+            "profit": -46261283
           }
         }
       }
@@ -4498,6 +5920,18 @@ const RAW = {
             "sales": 2923596671,
             "profit": -73990560
           }
+        },
+        "2023": {
+          "actual": {
+            "sales": 2510706125,
+            "profit": -57515007
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 2667495640,
+            "profit": -69923151
+          }
         }
       }
     },
@@ -4579,6 +6013,36 @@ const RAW = {
           "bullish": {
             "sales": 1786438222,
             "profit": 67427558
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 1617907800,
+            "profit": 58023265
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 1662992900,
+            "profit": 85285661
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 1841179900,
+            "profit": 119174497
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 1890441200,
+            "profit": 102032071
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 1901138100,
+            "profit": 62537381
           }
         }
       }
@@ -4662,6 +6126,36 @@ const RAW = {
             "sales": 9628577181,
             "profit": 789035622
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 6586584100,
+            "profit": 504822206
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6530121300,
+            "profit": 485507293
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 7731762300,
+            "profit": 654867267
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 8493252500,
+            "profit": 698520775
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 9210118700,
+            "profit": 763958740
+          }
         }
       }
     },
@@ -4743,6 +6237,36 @@ const RAW = {
           "bullish": {
             "sales": 3107997799,
             "profit": 167951294
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 2304060700,
+            "profit": 132520873
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 2304378800,
+            "profit": 115129288
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 2617404600,
+            "profit": 142624525
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 2841852500,
+            "profit": 92148841
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 2870642800,
+            "profit": 148834188
           }
         }
       }
@@ -4826,6 +6350,36 @@ const RAW = {
             "sales": 6553751376,
             "profit": 542201932
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 5384661600,
+            "profit": 454068026
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5439682700,
+            "profit": 440776734
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6024711400,
+            "profit": 518756034
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6340442200,
+            "profit": 529795174
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6956506200,
+            "profit": 583461163
+          }
         }
       }
     },
@@ -4907,6 +6461,36 @@ const RAW = {
           "bullish": {
             "sales": 5816051039,
             "profit": 238365184
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4516442800,
+            "profit": 494451339
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4530943100,
+            "profit": 508227659
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4941706700,
+            "profit": 535814097
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5119850600,
+            "profit": 372659435
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 4989142800,
+            "profit": 91949818
           }
         }
       }
@@ -4990,6 +6574,36 @@ const RAW = {
             "sales": 6790001302,
             "profit": 443072033
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 4981478753,
+            "profit": 271836803
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 5525815600,
+            "profit": 274010128
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 6633087300,
+            "profit": 395832732
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6942599200,
+            "profit": 443642247
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 7002629500,
+            "profit": 496987948
+          }
         }
       }
     },
@@ -5071,6 +6685,36 @@ const RAW = {
           "bullish": {
             "sales": 6512129796,
             "profit": 363412279
+          }
+        },
+        "2020": {
+          "actual": {
+            "sales": 3391301400,
+            "profit": 112062215
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 4436057500,
+            "profit": 115496869
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5567517700,
+            "profit": 316813358
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5960075100,
+            "profit": 419937631
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6319555212,
+            "profit": 345221536
           }
         }
       }
@@ -5154,6 +6798,36 @@ const RAW = {
             "sales": 8158532553,
             "profit": 601127054
           }
+        },
+        "2020": {
+          "actual": {
+            "sales": 6163966000,
+            "profit": 461282144
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 6173393900,
+            "profit": 433443060
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 7369620500,
+            "profit": 424432086
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 8576265400,
+            "profit": 571342926
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 9069667800,
+            "profit": 665220558
+          }
         }
       }
     },
@@ -5235,6 +6909,18 @@ const RAW = {
           "bullish": {
             "sales": 4649038850,
             "profit": -226587956
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 4436854600,
+            "profit": -395636800
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 4077196200,
+            "profit": -246119249
           }
         }
       }
@@ -5318,6 +7004,18 @@ const RAW = {
             "sales": 5911680804,
             "profit": -47939733
           }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6575497036,
+            "profit": -216098471
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6132937042,
+            "profit": -72165725
+          }
         }
       }
     },
@@ -5399,6 +7097,24 @@ const RAW = {
           "bullish": {
             "sales": 6370472106,
             "profit": 34413201
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 5769267556,
+            "profit": -1401466546
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5531140858,
+            "profit": -48800947
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5552363072,
+            "profit": 33178132
           }
         }
       }
@@ -5482,6 +7198,18 @@ const RAW = {
             "sales": 4552896156,
             "profit": -206419746
           }
+        },
+        "2023": {
+          "actual": {
+            "sales": 5633789036,
+            "profit": -235512715
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5266201300,
+            "profit": -217537166
+          }
         }
       }
     },
@@ -5563,6 +7291,18 @@ const RAW = {
           "bullish": {
             "sales": 10143121291,
             "profit": -564529586
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 8858195000,
+            "profit": 171764997
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 8709304300,
+            "profit": -1388246208
           }
         }
       }
@@ -5646,6 +7386,18 @@ const RAW = {
             "sales": 7545783016,
             "profit": 227326513
           }
+        },
+        "2023": {
+          "actual": {
+            "sales": 7338559715,
+            "profit": 135060790
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6980772400,
+            "profit": 202911380
+          }
         }
       }
     },
@@ -5728,6 +7480,12 @@ const RAW = {
             "sales": 4743500066,
             "profit": -72887716
           }
+        },
+        "2024": {
+          "actual": {
+            "sales": 5577760000,
+            "profit": -178843607
+          }
         }
       }
     },
@@ -5809,6 +7567,12 @@ const RAW = {
           "bullish": {
             "sales": 8574373966,
             "profit": 47383590
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 7624851265,
+            "profit": -866307848
           }
         }
       }
@@ -5894,9 +7658,225 @@ const RAW = {
           }
         }
       }
+    },
+    "旧東金店": {
+      "type": "B_RegionalStable",
+      "pop_idx": 100.0,
+      "years": {
+        "2020": {
+          "actual": {
+            "sales": 3368134000,
+            "profit": 119807241
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3416669300,
+            "profit": 56374248
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 4551757400,
+            "profit": 154847192
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 6469909000,
+            "profit": 267327943
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 6794061400,
+            "profit": 412641966
+          }
+        }
+      }
+    },
+    "大崎店": {
+      "type": "B_RegionalStable",
+      "pop_idx": 100.0,
+      "years": {
+        "2020": {
+          "actual": {
+            "sales": 1136271415,
+            "profit": -34387679
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 990289502,
+            "profit": -27535619
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 1042259705,
+            "profit": -41750142
+          }
+        },
+        "2023": {
+          "actual": {
+            "sales": 1119693900,
+            "profit": -25172623
+          }
+        },
+        "2024": {
+          "actual": {
+            "sales": 818830459,
+            "profit": -78552359
+          }
+        }
+      }
+    },
+    "利府店": {
+      "type": "B_RegionalStable",
+      "pop_idx": 100.0,
+      "years": {
+        "2020": {
+          "actual": {
+            "sales": 3170077200,
+            "profit": -106832418
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 2562885900,
+            "profit": -183718902
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 617077500,
+            "profit": -45113968
+          }
+        }
+      }
+    },
+    "旧高崎店": {
+      "type": "B_RegionalStable",
+      "pop_idx": 100.0,
+      "years": {
+        "2020": {
+          "actual": {
+            "sales": 3556949900,
+            "profit": 66071326
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3107269100,
+            "profit": -11586714
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 1020638800,
+            "profit": 35868567
+          }
+        }
+      }
+    },
+    "海老名店": {
+      "type": "B_RegionalStable",
+      "pop_idx": 100.0,
+      "years": {
+        "2020": {
+          "actual": {
+            "sales": 4990570900,
+            "profit": -19728459
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 3032287000,
+            "profit": 154300969
+          }
+        }
+      }
+    },
+    "前橋南店": {
+      "type": "B_RegionalStable",
+      "pop_idx": 100.0,
+      "years": {
+        "2020": {
+          "actual": {
+            "sales": 1095138880,
+            "profit": 35431940
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 981297723,
+            "profit": 28104905
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 114788680,
+            "profit": -4943953
+          }
+        }
+      }
+    },
+    "八千代店": {
+      "type": "B_RegionalStable",
+      "pop_idx": 100.0,
+      "years": {
+        "2020": {
+          "actual": {
+            "sales": 3366907201,
+            "profit": 87960319
+          }
+        },
+        "2021": {
+          "actual": {
+            "sales": 2901489977,
+            "profit": 11829577
+          }
+        },
+        "2022": {
+          "actual": {
+            "sales": 1292433699,
+            "profit": 48469944
+          }
+        }
+      }
     }
   },
   "totals": {
+    "2020": {
+      "actual": {
+        "sales": 268078425549,
+        "profit": 9729461391
+      }
+    },
+    "2021": {
+      "actual": {
+        "sales": 293294339715,
+        "profit": 8406690792
+      }
+    },
+    "2022": {
+      "actual": {
+        "sales": 345448032314,
+        "profit": 7185189868
+      }
+    },
+    "2023": {
+      "actual": {
+        "sales": 412994293103,
+        "profit": 13026809010
+      }
+    },
+    "2024": {
+      "actual": {
+        "sales": 447456888307,
+        "profit": 11072834583
+      }
+    },
     "2025": {
       "actual": {
         "sales": 465122467801,
@@ -5908,10 +7888,6 @@ const RAW = {
         "sales": 458474348202,
         "profit": 12112752542
       },
-      "bearish": {
-        "sales": 464520940289,
-        "profit": 12272811002
-      },
       "bullish": {
         "sales": 466743205577,
         "profit": 12329049319
@@ -5921,10 +7897,6 @@ const RAW = {
       "base": {
         "sales": 452030499838,
         "profit": 11919598425
-      },
-      "bearish": {
-        "sales": 464029438590,
-        "profit": 12236610748
       },
       "bullish": {
         "sales": 468440890411,
@@ -5936,10 +7908,6 @@ const RAW = {
         "sales": 445783297220,
         "profit": 11732495343
       },
-      "bearish": {
-        "sales": 463645955086,
-        "profit": 12203527895
-      },
       "bullish": {
         "sales": 470215586584,
         "profit": 12369410830
@@ -5949,10 +7917,6 @@ const RAW = {
       "base": {
         "sales": 439725415581,
         "profit": 11551220808
-      },
-      "bearish": {
-        "sales": 463368548321,
-        "profit": 12173503841
       },
       "bullish": {
         "sales": 472067373772,
@@ -5964,35 +7928,48 @@ const RAW = {
         "sales": 433849818649,
         "profit": 11375560986
       },
-      "bearish": {
-        "sales": 463195341191,
-        "profit": 12146481862
-      },
       "bullish": {
         "sales": 473996347016,
         "profit": 12418602650
       }
     }
-  }
+  },
+  "hist_years": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "forecast_years": [
+    2026,
+    2027,
+    2028,
+    2029,
+    2030
+  ]
 };
-const YEARS = [2025,2026,2027,2028,2029,2030];
+const HIST_YEARS  = RAW.hist_years;    // [2020..2024]
+const FCAST_YEARS = RAW.forecast_years; // [2026..2030]
+const ALL_YEARS   = [...HIST_YEARS, 2025, ...FCAST_YEARS];
+const HIST_COUNT  = HIST_YEARS.length;  // 5
+
 let currentSc = 'base';
-let sortCol = 3, sortAsc = false; // 初期ソートは2025年売上
+let sortCol = 8, sortAsc = false; // 初期ソート: 2025年売上
 
 function scenarioLabel(sc) {
   return sc === 'base' ? '施策なしケース' : '上振れケース';
 }
+function isHist(yr) { return HIST_YEARS.includes(yr) || yr === 2025; }
 
 function getVal(store, year, field) {
-  const sc = year === 2025 ? 'actual' : currentSc;
+  const sc = isHist(year) ? 'actual' : currentSc;
   return RAW.data[store]?.years?.[year]?.[sc]?.[field] ?? 0;
 }
-
 function getTotal(year, field) {
-  const sc = year === 2025 ? 'actual' : currentSc;
+  const sc = isHist(year) ? 'actual' : currentSc;
   return RAW.totals[year]?.[sc]?.[field] ?? 0;
 }
-
 function oku(v) { return (v / 1e8).toFixed(1); }
 function pct(v) { return (v * 100).toFixed(1) + '%'; }
 
@@ -6001,12 +7978,12 @@ function renderKPI() {
   const s30 = getTotal(2030, 'sales');
   const diff = s30 - s25;
   const ratio = s30 / s25 - 1;
+  const scName = scenarioLabel(currentSc);
   const cards = [
     { label: '2025年度 実績見込（売上）', value: oku(s25) + ' 億円', sub: '全68店舗合計', cls: '' },
-    { label: `2030年度 売上予測（${scenarioLabel(currentSc)}）`,
-       value: oku(s30) + ' 億円', sub: `対2025比 ${ratio >= 0 ? '+' : ''}${pct(ratio)}`, cls: ratio >= 0 ? 'up' : 'down' },
-    { label: '2030年度 増減額', value: `${diff >= 0 ? '+' : ''}${oku(diff)} 億円`, sub: '2025年度比', cls: diff >= 0 ? 'up' : 'down' },
-    { label: '2030年度 売上指数', value: (s30 / s25 * 100).toFixed(1), sub: '2025年度=100', cls: ratio >= 0 ? 'up' : 'down' },
+    { label: `2030年度 売上予測（${scName}）`, value: oku(s30) + ' 億円', sub: `対2025比 ${ratio>=0?'+':''}${pct(ratio)}`, cls: ratio>=0?'up':'down' },
+    { label: '2030年度 増減額', value: `${diff>=0?'+':''}${oku(diff)} 億円`, sub: '2025年度比', cls: diff>=0?'up':'down' },
+    { label: '2030年度 売上指数', value: (s30/s25*100).toFixed(1), sub: '2025年度=100', cls: ratio>=0?'up':'down' },
   ];
   document.getElementById('kpi-cards').innerHTML = cards.map(c => `
     <div class="card">
@@ -6018,27 +7995,54 @@ function renderKPI() {
 
 let salesChart;
 function buildCharts() {
-  const labels = YEARS.map(String);
+  const labels = ALL_YEARS.map(String);
+  // 過去実績ライン (2020-2025)
+  const histData = ALL_YEARS.map(y => isHist(y) ? +(oku(getTotal(y,'sales'))) : null);
+  // 施策なし (2025-2030、2025で実績ラインとつなぐ)
+  const baseData = ALL_YEARS.map(y => {
+    if (HIST_YEARS.includes(y)) return null;
+    if (y === 2025) return +(oku(getTotal(2025,'sales')));
+    return +(oku(RAW.totals[y]?.base?.sales ?? 0));
+  });
+  // 上振れ (2025-2030)
+  const bullData = ALL_YEARS.map(y => {
+    if (HIST_YEARS.includes(y)) return null;
+    if (y === 2025) return +(oku(getTotal(2025,'sales')));
+    return +(oku(RAW.totals[y]?.bullish?.sales ?? 0));
+  });
+
   const salesCtx = document.getElementById('salesChart').getContext('2d');
   salesChart = new Chart(salesCtx, {
     type: 'line',
     data: {
       labels,
       datasets: [
-        { label: '施策なしケース', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.base?.sales??0)))), borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.4, fill: false, pointRadius: 4 },
-        { label: '上振れケース', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.bullish?.sales??0)))), borderColor: '#22c55e', borderDash: [4,4], tension: 0.4, fill: false, pointRadius: 4 },
+        { label: '過去実績', data: histData, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,.08)', tension: 0.3, fill: true, pointRadius: 5, pointBackgroundColor: '#f59e0b', spanGaps: false },
+        { label: '施策なしケース', data: baseData, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.4, fill: false, pointRadius: 4, spanGaps: false },
+        { label: '上振れケース', data: bullData, borderColor: '#22c55e', borderDash: [5,4], tension: 0.4, fill: false, pointRadius: 4, spanGaps: false },
       ]
     },
     options: {
-      responsive: true, plugins: { legend: { labels: { color: '#e2e8f0', font: { size: 12 } } } },
-      scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
-                 y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' }, title: { display: true, text: '億円', color: '#94a3b8' } } }
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: '#e2e8f0', font: { size: 12 } } },
+        annotation: undefined
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: (ctx) => HIST_YEARS.map(String).includes(String(ALL_YEARS[ctx.index])) ? '#fcd34d' : ctx.index === HIST_COUNT ? '#e2e8f0' : '#93c5fd'
+          },
+          grid: { color: '#1e293b' }
+        },
+        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' }, title: { display: true, text: '億円', color: '#94a3b8' } }
+      }
     }
   });
 }
 
 function updateCharts() {
-  document.getElementById('hm-title').innerText = `売上ヒートマップ（2025〜2030年度・${scenarioLabel(currentSc)}）`;
+  document.getElementById('hm-title').innerText = `売上ヒートマップ（2020〜2030年度・${scenarioLabel(currentSc)})`;
 }
 
 let tableRows = [];
@@ -6048,9 +8052,10 @@ function buildTableRows() {
     const s30 = getVal(store, 2030, 'sales');
     const stype = RAW.data[store]?.type ?? 'B_RegionalStable';
     const pop_ratio = (RAW.data[store]?.pop_idx ?? 100.0) / 100.0 - 1.0;
+    const histVals  = HIST_YEARS.map(y => getVal(store, y, 'sales'));
+    const fcastVals = FCAST_YEARS.map(y => getVal(store, y, 'sales'));
     return {
-      store, stype, pop_ratio, s25, s30,
-      vals: YEARS.slice(1).map(y => getVal(store, y, 'sales')),
+      store, stype, pop_ratio, s25, s30, histVals, fcastVals,
       ratio: s25 > 0 ? s30 / s25 - 1 : 0,
     };
   });
@@ -6065,28 +8070,30 @@ function renderTable() {
     let av, bv;
     if (sortCol === 0) { av = a.store; bv = b.store; return sortAsc ? av.localeCompare(bv,'ja') : bv.localeCompare(av,'ja'); }
     if (sortCol === 1) { av = a.stype; bv = b.stype; return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av); }
-    if (sortCol === 2) { av = a.pop_ratio; bv = b.pop_ratio; }
-    else if (sortCol === 3) { av = a.s25; bv = b.s25; }
-    else if (sortCol >= 4 && sortCol <= 8) { av = a.vals[sortCol-4] ?? 0; bv = b.vals[sortCol-4] ?? 0; }
-    else if (sortCol === 9) { av = a.ratio; bv = b.ratio; }
-        return sortAsc ? av - bv : bv - av;
+    if (sortCol === 2)  { av = a.pop_ratio; bv = b.pop_ratio; }
+    else if (sortCol >= 3 && sortCol <= 7) { av = a.histVals[sortCol-3] ?? 0; bv = b.histVals[sortCol-3] ?? 0; }
+    else if (sortCol === 8)  { av = a.s25; bv = b.s25; }
+    else if (sortCol >= 9 && sortCol <= 13) { av = a.fcastVals[sortCol-9] ?? 0; bv = b.fcastVals[sortCol-9] ?? 0; }
+    else if (sortCol === 14) { av = a.ratio; bv = b.ratio; }
+    return sortAsc ? av - bv : bv - av;
   });
 
   const typeLabel = {
-    'A_ShareExpansion': '<span class="badge type-A">競合影響大</span>',
-    'B_RegionalStable': '<span class="badge type-B">地域安定</span>',
+    'A_ShareExpansion':  '<span class="badge type-A">競合影響大</span>',
+    'B_RegionalStable':  '<span class="badge type-B">地域安定</span>',
     'C_CompetitiveLoss': '<span class="badge type-C">下落傾向</span>',
-    'New_Store': '<span class="badge type-N">新店</span>'
+    'New_Store':         '<span class="badge type-N">新店</span>'
   };
-  
+
   const tbody = document.getElementById('store-tbody');
   tbody.innerHTML = filtered.map(r => `
     <tr>
       <td class="left">${r.store}</td>
       <td style="text-align:center">${typeLabel[r.stype] ?? r.stype}</td>
       <td class="${r.pop_ratio>=0?'positive':'negative'}">${r.pop_ratio>=0?'+':''}${pct(r.pop_ratio)}</td>
+      ${r.histVals.map(v => `<td class="hist-val">${v > 0 ? oku(v) : '—'}</td>`).join('')}
       <td>${oku(r.s25)}</td>
-      ${r.vals.map(v => `<td>${oku(v)}</td>`).join('')}
+      ${r.fcastVals.map(v => `<td class="fcast-val">${oku(v)}</td>`).join('')}
       <td class="${r.ratio>=0?'positive':'negative'}">${r.ratio>=0?'+':''}${pct(r.ratio)}</td>
     </tr>`).join('');
 }
@@ -6096,21 +8103,18 @@ function sortTable(col) {
   else { sortCol = col; sortAsc = col === 0; }
   renderTable();
 }
-
 function filterStores() { renderTable(); }
 
 function renderHeatmap() {
   const allSales = [];
   RAW.stores.forEach(store => {
-    YEARS.forEach(yr => {
-      const sc = yr === 2025 ? 'actual' : currentSc;
-      allSales.push(RAW.data[store]?.years?.[yr]?.[sc]?.sales ?? 0);
-    });
+    ALL_YEARS.forEach(yr => { allSales.push(getVal(store, yr, 'sales')); });
   });
-  const minSales = Math.min(...allSales);
-  const maxSales = Math.max(...allSales);
+  const maxS = Math.max(...allSales.filter(v => v > 0));
+  const minS = Math.min(...allSales.filter(v => v > 0));
   const colorForSales = (s) => {
-    const ratio = maxSales === minSales ? 0 : (s - minSales) / (maxSales - minSales);
+    if (s <= 0) return '#334155';
+    const ratio = maxS === minS ? 0 : (s - minS) / (maxS - minS);
     if (ratio >= 0.85) return '#1d4ed8';
     if (ratio >= 0.65) return '#2563eb';
     if (ratio >= 0.45) return '#3b82f6';
@@ -6120,18 +8124,26 @@ function renderHeatmap() {
 
   const header = `<div class="hm-row">
     <div style="width:120px;font-size:10px;color:var(--text2);text-align:right;padding-right:8px;">店舗名</div>
-    ${YEARS.map(y=>`<div class="hm-cell" style="background:transparent;color:var(--text2);">${y}</div>`).join('')}
+    ${HIST_YEARS.map(y=>`<div class="hm-cell" style="background:transparent;color:#fcd34d;">${y}</div>`).join('')}
+    <div class="hm-sep" style="opacity:0"></div>
+    <div class="hm-cell" style="background:transparent;color:var(--text2);">2025</div>
+    ${FCAST_YEARS.map(y=>`<div class="hm-cell" style="background:transparent;color:#93c5fd;">${y}</div>`).join('')}
   </div>`;
 
   const rows = RAW.stores.map(store => {
-    const cells = YEARS.map(yr => {
-      const sc = yr === 2025 ? 'actual' : currentSc;
-      const s = RAW.data[store]?.years?.[yr]?.[sc]?.sales ?? 0;
+    const histCells  = HIST_YEARS.map(yr => {
+      const s = getVal(store, yr, 'sales');
+      return `<div class="hm-cell" style="background:${colorForSales(s)};opacity:0.85" title="${store} ${yr}: ${s>0?oku(s)+' 億円':'—'}">${s>0?oku(s):'—'}</div>`;
+    }).join('');
+    const s25 = getVal(store, 2025, 'sales');
+    const cell25 = `<div class="hm-cell" style="background:${colorForSales(s25)}" title="${store} 2025: ${oku(s25)} 億円">${oku(s25)}</div>`;
+    const fcastCells = FCAST_YEARS.map(yr => {
+      const s = getVal(store, yr, 'sales');
       return `<div class="hm-cell" style="background:${colorForSales(s)}" title="${store} ${yr}: ${oku(s)} 億円">${oku(s)}</div>`;
     }).join('');
     return `<div class="hm-row">
       <div class="hm-label" title="${store}">${store}</div>
-      ${cells}
+      ${histCells}<div class="hm-sep"></div>${cell25}${fcastCells}
     </div>`;
   }).join('');
 
@@ -6156,9 +8168,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('pw-input');
   if (input) {
     input.focus();
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') unlockDashboard();
-    });
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') unlockDashboard(); });
   }
 });
 </script>
