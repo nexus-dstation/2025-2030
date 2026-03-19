@@ -154,7 +154,7 @@
       <canvas id="salesChart"></canvas>
     </div>
     <div class="chart-box">
-      <h3 id="c2-title">全店合計 売上前年差（億円）- 施策反映</h3>
+      <h3 id="c2-title">全店合計 売上前年差（億円）- 施策なしケース</h3>
       <canvas id="profitChart"></canvas>
     </div>
   </div>
@@ -5984,7 +5984,7 @@ let currentSc = 'base';
 let sortCol = 3, sortAsc = false; // 初期ソートは2025年売上
 
 function scenarioLabel(sc) {
-  return sc === 'base' ? '施策なしケース' : sc === 'bearish' ? '施策反映' : '上振れケース';
+  return sc === 'base' ? '施策なしケース' : '上振れケース';
 }
 
 function getVal(store, year, field) {
@@ -6030,7 +6030,6 @@ function buildCharts() {
       labels,
       datasets: [
         { label: '施策なしケース', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.base?.sales??0)))), borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.4, fill: false, pointRadius: 4 },
-        { label: '施策反映', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.bearish?.sales??0)))), borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,.15)', tension: 0.4, fill: false, pointRadius: 5 },
         { label: '上振れケース', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.bullish?.sales??0)))), borderColor: '#22c55e', borderDash: [4,4], tension: 0.4, fill: false, pointRadius: 4 },
       ]
     },
