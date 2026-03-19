@@ -72,111 +72,78 @@
               font-size: 10px; font-weight: 600; color: #fff; }
   .hm-header { display: flex; gap: 4px; margin-left: 124px; }
   .hm-header span { width: 52px; font-size: 10px; color: var(--text2); text-align: center; }
+
+  .basis-box { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--border); margin-top: 24px; }
+  .basis-box h3 { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+  .basis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .basis-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .basis-item h4 { font-size: 13px; margin-bottom: 8px; }
+  .basis-item p { font-size: 12px; color: var(--text2); line-height: 1.8; }
+  .basis-footnote { margin-top: 14px; font-size: 12px; color: var(--text2); line-height: 1.8; }
   footer { text-align: center; padding: 24px; font-size: 12px; color: var(--text2); border-top: 1px solid var(--border); margin-top: 32px; }
 
-  /* 簡易パスワードロック */
-  body { overflow-x: hidden; }
-  #app-shell { display: none; }
-  body.unlocked #app-shell { display: block; }
-  #auth-overlay {
+  /* パスワードゲート */
+  #app { display: none; }
+  .pw-gate {
     position: fixed; inset: 0; z-index: 9999;
     display: flex; align-items: center; justify-content: center;
-    padding: 24px; background:
-      radial-gradient(circle at top, rgba(59,130,246,.18), transparent 35%),
-      linear-gradient(180deg, rgba(15,23,42,.98), rgba(2,6,23,1));
+    background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+    padding: 24px;
   }
-  body.unlocked #auth-overlay { display: none; }
-  .auth-card {
+  .pw-card {
     width: 100%; max-width: 420px;
-    background: rgba(30,41,59,.96);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 28px 24px 22px;
-    box-shadow: 0 24px 60px rgba(0,0,0,.45);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.35);
   }
-  .auth-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 12px; color: #bfdbfe;
-    background: rgba(30,64,175,.25);
-    border: 1px solid rgba(96,165,250,.35);
-    border-radius: 9999px; padding: 6px 10px; margin-bottom: 14px;
+  .pw-card h2 { font-size: 22px; margin-bottom: 8px; }
+  .pw-card p { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.7; }
+  .pw-row { display: flex; gap: 10px; }
+  .pw-input {
+    flex: 1; background: var(--surface2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; font-size: 16px; outline: none;
   }
-  .auth-card h2 { font-size: 24px; margin-bottom: 10px; }
-  .auth-card p { font-size: 13px; line-height: 1.7; color: var(--text2); margin-bottom: 16px; }
-  .auth-input {
-    width: 100%; padding: 13px 14px;
-    border-radius: 10px; border: 1px solid var(--border);
-    background: #0f172a; color: var(--text);
-    font-size: 16px; outline: none;
+  .pw-input:focus { border-color: var(--accent); }
+  .pw-btn {
+    background: var(--accent); color: #fff; border: 0; cursor: pointer;
+    border-radius: 10px; padding: 12px 18px; font-size: 14px; font-weight: 700;
   }
-  .auth-input:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 0 3px rgba(96,165,250,.18);
-  }
-  .auth-actions { display: flex; gap: 10px; margin-top: 12px; }
-  .auth-btn {
-    width: 100%; border: 0; cursor: pointer;
-    border-radius: 10px; padding: 13px 16px;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: #fff; font-size: 14px; font-weight: 700;
-  }
-  .auth-error {
-    min-height: 20px; margin-top: 10px;
-    font-size: 12px; color: #fca5a5;
-  }
-  .auth-note {
-    margin-top: 14px; font-size: 11px; color: #64748b;
-  }
+  .pw-error { min-height: 18px; margin-top: 10px; font-size: 12px; color: #fca5a5; }
 
 </style>
 </head>
 <body>
-
-<div id="auth-overlay" aria-hidden="false">
-  <div class="auth-card" role="dialog" aria-modal="true" aria-labelledby="auth-title">
-    <div class="auth-badge">🔒 閲覧制限</div>
-    <h2 id="auth-title">パスワードを入力してください</h2>
-    <p>このダッシュボードは簡易ロックされています。閲覧するには、共有されたパスワードを入力してください。</p>
-    <input
-      id="auth-password"
-      class="auth-input"
-      type="password"
-      inputmode="numeric"
-      autocomplete="current-password"
-      placeholder="パスワード"
-      aria-label="パスワード"
-    >
-    <div class="auth-actions">
-      <button id="auth-submit" class="auth-btn" type="button">開く</button>
+<div id="pw-gate" class="pw-gate">
+  <div class="pw-card">
+    <h2>パスワード入力</h2>
+    <p>このダッシュボードを閲覧するには、最初にパスワードを入力してください。</p>
+    <div class="pw-row">
+      <input id="pw-input" class="pw-input" type="password" inputmode="numeric" autocomplete="off" placeholder="パスワード">
+      <button class="pw-btn" onclick="unlockDashboard()">表示</button>
     </div>
-    <div id="auth-error" class="auth-error" aria-live="polite"></div>
-    <div class="auth-note">※ このロックはHTML内の簡易制御です。</div>
+    <div id="pw-error" class="pw-error"></div>
   </div>
 </div>
-<div id="app-shell">
-
+<div id="app">
 <header>
-  <h1>🏪 2030年度 売上予測ダッシュボード</h1>
-  <p>2025年度着地見込みを起点とした、全68店舗・2026〜2030年度の売上・営業利益予測</p>
+  <h1>2030年度 売上予測ダッシュボード</h1>
+  <p>2025年度着地見込みを起点とした、全68店舗・2026〜2030年度の売上予測</p>
 </header>
 
 <div class="container">
 
   <div class="scenario-bar">
     <label>シナリオ選択：</label>
-    <button class="sc-btn"        data-sc="base"    onclick="setScenario('base')">📊 外部環境ベース</button>
-    <button class="sc-btn active" data-sc="bearish" onclick="setScenario('bearish')">🎯 施策反映（本命）</button>
-    <button class="sc-btn"        data-sc="bullish" onclick="setScenario('bullish')">🚀 ストレッチ</button>
+    <button class="sc-btn active" data-sc="base"    onclick="setScenario('base')">施策なしケース</button>
+    <button class="sc-btn"        data-sc="bullish" onclick="setScenario('bullish')">上振れケース</button>
   </div>
 
   <div id="sc-desc-base" class="sc-desc" style="display:none; padding:12px 16px; background:var(--surface2); border-left:4px solid var(--base); margin-bottom:24px; font-size:13px; border-radius:4px;">
-    <b>📊 外部環境ベース</b>：特別な全社施策を打たず、今の競争力のまま業界の波に揉まれた場合の「なりゆき」予測。人口減等の影響を強く受ける。
-  </div>
-  <div id="sc-desc-bearish" class="sc-desc" style="display:none; padding:12px 16px; background:var(--surface2); border-left:4px solid var(--bear); margin-bottom:24px; font-size:13px; border-radius:4px;">
-    <b>🎯 施策反映（本命）</b>：スマスロ・新機種配置等の努力で客単価と稼働を維持し、縮小分を相殺する事業計画本命シナリオ。2025年比トントン〜微減着地を目指す。
+    <b>施策なしケース</b>：特別な全社施策を打たず、今の競争力のまま業界の波に揉まれた場合の着地見込みです。人口減などの影響を受けやすい前提です。
   </div>
   <div id="sc-desc-bullish" class="sc-desc" style="display:none; padding:12px 16px; background:var(--surface2); border-left:4px solid var(--bull); margin-bottom:24px; font-size:13px; border-radius:4px;">
-    <b>🚀 ストレッチ</b>：本命施策に加え、現状不振の店舗への大規模テコ入れにも成功し、全体でプラス成長を達成する挑戦目標。
+    <b>上振れケース</b>：施策なしケースを上回り、不振店対策まで順調に進んだ場合の上振れシナリオです。
   </div>
 
   <div class="cards" id="kpi-cards"></div>
@@ -187,7 +154,7 @@
       <canvas id="salesChart"></canvas>
     </div>
     <div class="chart-box">
-      <h3 id="c2-title">全店合計 営業利益推移（億円）- 施策反映シナリオ</h3>
+      <h3 id="c2-title">全店合計 売上前年差（億円）- 施策反映</h3>
       <canvas id="profitChart"></canvas>
     </div>
   </div>
@@ -195,7 +162,7 @@
   <div class="table-wrap" style="margin-bottom:24px;">
     <div class="table-header">
       <h3>店舗別 売上予測（2025〜2030年度）</h3>
-      <input class="search-box" type="text" id="store-search" placeholder="🔍 店舗名で絞り込み" oninput="filterStores()">
+      <input class="search-box" type="text" id="store-search" placeholder="店舗名で絞り込み" oninput="filterStores()">
     </div>
     <div style="overflow-x:auto;">
       <table id="store-table">
@@ -211,7 +178,7 @@
             <th onclick="sortTable(7)">2029<br>億円</th>
             <th onclick="sortTable(8)">2030<br>億円</th>
             <th onclick="sortTable(9)">対2025比<br>(2030)</th>
-            <th onclick="sortTable(10)">営業利益率<br>(2025)</th>
+            
           </tr>
         </thead>
         <tbody id="store-tbody"></tbody>
@@ -220,8 +187,43 @@
   </div>
 
   <div class="chart-box" id="heatmap-box">
-    <h3 id="hm-title">営業利益率ヒートマップ（2025〜2030年度）</h3>
+    <h3 id="hm-title">売上ヒートマップ（2025〜2030年度）</h3>
     <div id="heatmap-container"></div>
+  </div>
+
+
+  <div class="basis-box" id="basis-box">
+    <h3>数値判断に使った基準と考え方</h3>
+    <div class="basis-grid">
+      <div class="basis-item">
+        <h4>起点売上 4,651億円</h4>
+        <p>2025年度売上見込の全店合計を起点に設定。過去の回復トレンドをそのまま伸ばすのではなく、足元実績ベースで2030年度を試算しています。</p>
+      </div>
+      <div class="basis-item">
+        <h4>業界自然減 年▲2.5％</h4>
+        <p>業界全体の縮小傾向を全店共通の前提として反映。スマート遊技機特需の一巡、店舗数・設置台数の減少、外部市場データの前年割れを踏まえた基準値です。</p>
+      </div>
+      <div class="basis-item">
+        <h4>人口要因 年▲0.3％〜▲1.2％</h4>
+        <p>全店一律ではなく、各市区町村の人口推移と高齢化進行度から店舗ごとに補正。都市部は影響を小さく、人口減少が進む地域は影響を大きく見ています。</p>
+      </div>
+      <div class="basis-item">
+        <h4>店舗分類の考え方</h4>
+        <p>競合影響大・地域安定・下落傾向・新店の4分類で商圏環境を整理。競合状況や既存の売上推移を踏まえ、シェア獲得余地や下落リスクの差を織り込んでいます。</p>
+      </div>
+      <div class="basis-item">
+        <h4>施策なしケース</h4>
+        <p>追加施策を上乗せせず、外部環境と店舗条件をそのまま反映した着地見込み。自然体でどこまで落ちるかを確認するための基準シナリオです。</p>
+      </div>
+      <div class="basis-item">
+        <h4>上振れケース</h4>
+        <p>不振店対策、営業施策の積み上げが順調に進んだ場合の上振れシナリオ。改善余地をどこまで取り切れるかを確認するための目線です。</p>
+      </div>
+    </div>
+    <div class="basis-footnote">
+      参考にした外部情報：矢野経済研究所のパチンコ関連機器市場データ、警察庁の業界統計、国立社会保障・人口問題研究所の将来人口推計。<br>
+      社内反映項目：2025年度売上見込、店舗分類、商圏環境、施策達成度の置き方。
+    </div>
   </div>
 
 </div>
@@ -234,57 +236,21 @@
 
 <script>
 
-const APP_PASSWORD = '7777';
-const AUTH_SESSION_KEY = 'forecast_dashboard_auth_ok_v1';
-let dashboardInitialized = false;
-
-function initDashboard() {
-  if (dashboardInitialized) return;
-  buildCharts();
-  setScenario('bearish');
-  renderHeatmap();
-  dashboardInitialized = true;
-}
-
+const DASHBOARD_PASSWORD = '7777';
 function unlockDashboard() {
-  document.body.classList.add('unlocked');
-  sessionStorage.setItem(AUTH_SESSION_KEY, '1');
-  initDashboard();
-}
-
-function tryUnlock() {
-  const input = document.getElementById('auth-password');
-  const error = document.getElementById('auth-error');
+  const input = document.getElementById('pw-input');
+  const error = document.getElementById('pw-error');
   if (!input) return;
-
-  if (input.value === APP_PASSWORD) {
+  if (input.value === DASHBOARD_PASSWORD) {
+    document.getElementById('pw-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
     error.textContent = '';
-    unlockDashboard();
   } else {
     error.textContent = 'パスワードが違います。';
+    input.value = '';
     input.focus();
-    input.select();
   }
 }
-
-function initPasswordGate() {
-  const input = document.getElementById('auth-password');
-  const button = document.getElementById('auth-submit');
-
-  if (sessionStorage.getItem(AUTH_SESSION_KEY) === '1') {
-    unlockDashboard();
-    return;
-  }
-
-  if (button) button.addEventListener('click', tryUnlock);
-  if (input) {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') tryUnlock();
-    });
-    setTimeout(() => input.focus(), 50);
-  }
-}
-
 const RAW = {
   "stores": [
     "沼田店",
@@ -6014,8 +5980,12 @@ const RAW = {
   }
 };
 const YEARS = [2025,2026,2027,2028,2029,2030];
-let currentSc = 'bearish';
+let currentSc = 'base';
 let sortCol = 3, sortAsc = false; // 初期ソートは2025年売上
+
+function scenarioLabel(sc) {
+  return sc === 'base' ? '施策なしケース' : sc === 'bearish' ? '施策反映' : '上振れケース';
+}
 
 function getVal(store, year, field) {
   const sc = year === 2025 ? 'actual' : currentSc;
@@ -6031,16 +6001,16 @@ function oku(v) { return (v / 1e8).toFixed(1); }
 function pct(v) { return (v * 100).toFixed(1) + '%'; }
 
 function renderKPI() {
-  const s25 = getTotal(2025, 'sales'), p25 = getTotal(2025, 'profit');
-  const s30 = getTotal(2030, 'sales'), p30 = getTotal(2030, 'profit');
+  const s25 = getTotal(2025, 'sales');
+  const s30 = getTotal(2030, 'sales');
+  const diff = s30 - s25;
   const ratio = s30 / s25 - 1;
   const cards = [
     { label: '2025年度 実績見込（売上）', value: oku(s25) + ' 億円', sub: '全68店舗合計', cls: '' },
-    { label: `2030年度 売上予測（${currentSc === 'base' ? '外部環境' : currentSc === 'bearish' ? '施策反映' : 'ストレッチ'}）`,
+    { label: `2030年度 売上予測（${scenarioLabel(currentSc)}）`,
        value: oku(s30) + ' 億円', sub: `対2025比 ${ratio >= 0 ? '+' : ''}${pct(ratio)}`, cls: ratio >= 0 ? 'up' : 'down' },
-    { label: '2025年度 営業利益（実績見込）', value: oku(p25) + ' 億円', sub: '利益率 ' + pct(p25 / s25), cls: '' },
-    { label: `2030年度 営業利益（${currentSc === 'base' ? '外部環境' : currentSc === 'bearish' ? '施策反映' : 'ストレッチ'}）`,
-       value: oku(p30) + ' 億円', sub: '利益率 ' + pct(p30 / s30), cls: p30 >= p25 ? 'up' : 'down' },
+    { label: '2030年度 増減額', value: `${diff >= 0 ? '+' : ''}${oku(diff)} 億円`, sub: '2025年度比', cls: diff >= 0 ? 'up' : 'down' },
+    { label: '2030年度 売上指数', value: (s30 / s25 * 100).toFixed(1), sub: '2025年度=100', cls: ratio >= 0 ? 'up' : 'down' },
   ];
   document.getElementById('kpi-cards').innerHTML = cards.map(c => `
     <div class="card">
@@ -6050,7 +6020,7 @@ function renderKPI() {
     </div>`).join('');
 }
 
-let salesChart, profitChart;
+let salesChart, deltaChart;
 function buildCharts() {
   const labels = YEARS.map(String);
   const salesCtx = document.getElementById('salesChart').getContext('2d');
@@ -6059,9 +6029,9 @@ function buildCharts() {
     data: {
       labels,
       datasets: [
-        { label: '外部環境', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.base?.sales??0)))), borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.4, fill: false, pointRadius: 4 },
+        { label: '施策なしケース', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.base?.sales??0)))), borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.4, fill: false, pointRadius: 4 },
         { label: '施策反映', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.bearish?.sales??0)))), borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,.15)', tension: 0.4, fill: false, pointRadius: 5 },
-        { label: 'ストレッチ', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.bullish?.sales??0)))), borderColor: '#22c55e', borderDash: [4,4], tension: 0.4, fill: false, pointRadius: 4 },
+        { label: '上振れケース', data: YEARS.map(y => +(oku(y===2025 ? getTotal(y,'sales') : (RAW.totals[y]?.bullish?.sales??0)))), borderColor: '#22c55e', borderDash: [4,4], tension: 0.4, fill: false, pointRadius: 4 },
       ]
     },
     options: {
@@ -6071,13 +6041,13 @@ function buildCharts() {
     }
   });
 
-  const profitCtx = document.getElementById('profitChart').getContext('2d');
-  profitChart = new Chart(profitCtx, {
+  const deltaCtx = document.getElementById('profitChart').getContext('2d');
+  deltaChart = new Chart(deltaCtx, {
     type: 'bar',
     data: {
       labels,
       datasets: [
-        { label: '営業利益', data: YEARS.map(y => +(oku(getTotal(y, 'profit')))), backgroundColor: YEARS.map((y,i) => i===0 ? '#94a3b8' : 'rgba(239,68,68,.7)'), borderRadius: 4 },
+        { label: '売上前年差', data: YEARS.map((y, i) => i === 0 ? 0 : +((getTotal(y, 'sales') - getTotal(YEARS[i-1], 'sales')) / 1e8).toFixed(1)), backgroundColor: YEARS.map((y,i) => i===0 ? '#94a3b8' : 'rgba(59,130,246,.75)'), borderRadius: 4 },
       ]
     },
     options: {
@@ -6089,17 +6059,16 @@ function buildCharts() {
 }
 
 function updateCharts() {
-  profitChart.data.datasets[0].data = YEARS.map(y => +(oku(getTotal(y,'profit'))));
-  document.getElementById('c2-title').innerText = `全店合計 営業利益推移（億円）- ${currentSc === 'base' ? '外部環境' : currentSc === 'bearish' ? '施策反映' : 'ストレッチ'}シナリオ`;
-  profitChart.update();
-  document.getElementById('hm-title').innerText = `営業利益率ヒートマップ（2025〜2030年度・${currentSc === 'base' ? '外部環境' : currentSc === 'bearish' ? '施策反映' : 'ストレッチ'}）`;
+  deltaChart.data.datasets[0].data = YEARS.map((y, i) => i === 0 ? 0 : +((getTotal(y, 'sales') - getTotal(YEARS[i-1], 'sales')) / 1e8).toFixed(1));
+  document.getElementById('c2-title').innerText = `全店合計 売上前年差（億円）- ${scenarioLabel(currentSc)}`;
+  deltaChart.update();
+  document.getElementById('hm-title').innerText = `売上ヒートマップ（2025〜2030年度・${scenarioLabel(currentSc)}）`;
 }
 
 let tableRows = [];
 function buildTableRows() {
   tableRows = RAW.stores.map(store => {
     const s25 = getVal(store, 2025, 'sales');
-    const p25 = getVal(store, 2025, 'profit');
     const s30 = getVal(store, 2030, 'sales');
     const stype = RAW.data[store]?.type ?? 'B_RegionalStable';
     const pop_ratio = (RAW.data[store]?.pop_idx ?? 100.0) / 100.0 - 1.0;
@@ -6107,7 +6076,6 @@ function buildTableRows() {
       store, stype, pop_ratio, s25, s30,
       vals: YEARS.slice(1).map(y => getVal(store, y, 'sales')),
       ratio: s25 > 0 ? s30 / s25 - 1 : 0,
-      margin: s25 > 0 ? p25 / s25 : 0,
     };
   });
 }
@@ -6125,14 +6093,13 @@ function renderTable() {
     else if (sortCol === 3) { av = a.s25; bv = b.s25; }
     else if (sortCol >= 4 && sortCol <= 8) { av = a.vals[sortCol-4] ?? 0; bv = b.vals[sortCol-4] ?? 0; }
     else if (sortCol === 9) { av = a.ratio; bv = b.ratio; }
-    else if (sortCol === 10) { av = a.margin; bv = b.margin; }
-    return sortAsc ? av - bv : bv - av;
+        return sortAsc ? av - bv : bv - av;
   });
 
   const typeLabel = {
-    'A_ShareExpansion': '<span class="badge type-A">シェア拡大</span>',
+    'A_ShareExpansion': '<span class="badge type-A">競合影響大</span>',
     'B_RegionalStable': '<span class="badge type-B">地域安定</span>',
-    'C_CompetitiveLoss': '<span class="badge type-C">競争劣位</span>',
+    'C_CompetitiveLoss': '<span class="badge type-C">下落傾向</span>',
     'New_Store': '<span class="badge type-N">新店</span>'
   };
   
@@ -6145,7 +6112,6 @@ function renderTable() {
       <td>${oku(r.s25)}</td>
       ${r.vals.map(v => `<td>${oku(v)}</td>`).join('')}
       <td class="${r.ratio>=0?'positive':'negative'}">${r.ratio>=0?'+':''}${pct(r.ratio)}</td>
-      <td class="${r.margin>=0?'positive':'negative'}">${pct(r.margin)}</td>
     </tr>`).join('');
 }
 
@@ -6158,14 +6124,22 @@ function sortTable(col) {
 function filterStores() { renderTable(); }
 
 function renderHeatmap() {
-  const maxM = 0.10, minM = -0.10;
-  const colorForMargin = (m) => {
-    if (m >= 0.05) return '#166534';
-    if (m >= 0.03) return '#15803d';
-    if (m >= 0.01) return '#4ade80';
-    if (m >= 0)    return '#86efac';
-    if (m >= -0.02) return '#fca5a5';
-    return '#7f1d1d';
+  const allSales = [];
+  RAW.stores.forEach(store => {
+    YEARS.forEach(yr => {
+      const sc = yr === 2025 ? 'actual' : currentSc;
+      allSales.push(RAW.data[store]?.years?.[yr]?.[sc]?.sales ?? 0);
+    });
+  });
+  const minSales = Math.min(...allSales);
+  const maxSales = Math.max(...allSales);
+  const colorForSales = (s) => {
+    const ratio = maxSales === minSales ? 0 : (s - minSales) / (maxSales - minSales);
+    if (ratio >= 0.85) return '#1d4ed8';
+    if (ratio >= 0.65) return '#2563eb';
+    if (ratio >= 0.45) return '#3b82f6';
+    if (ratio >= 0.25) return '#60a5fa';
+    return '#93c5fd';
   };
 
   const header = `<div class="hm-row">
@@ -6177,9 +6151,7 @@ function renderHeatmap() {
     const cells = YEARS.map(yr => {
       const sc = yr === 2025 ? 'actual' : currentSc;
       const s = RAW.data[store]?.years?.[yr]?.[sc]?.sales ?? 0;
-      const p = RAW.data[store]?.years?.[yr]?.[sc]?.profit ?? 0;
-      const m = s > 0 ? p / s : 0;
-      return `<div class="hm-cell" style="background:${colorForMargin(m)}" title="${store} ${yr}: ${pct(m)}">${pct(m)}</div>`;
+      return `<div class="hm-cell" style="background:${colorForSales(s)}" title="${store} ${yr}: ${oku(s)} 億円">${oku(s)}</div>`;
     }).join('');
     return `<div class="hm-row">
       <div class="hm-label" title="${store}">${store}</div>
@@ -6196,14 +6168,24 @@ function setScenario(sc) {
   document.querySelectorAll('.sc-btn').forEach(b => b.classList.toggle('active', b.dataset.sc === sc));
   document.querySelectorAll('.sc-desc').forEach(d => d.style.display = d.id === 'sc-desc-' + sc ? 'block' : 'none');
   renderKPI();
-  if (typeof profitChart !== 'undefined') {
+  if (typeof deltaChart !== 'undefined') {
       updateCharts();
   }
   renderTable();
+  renderHeatmap();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  initPasswordGate();
+  buildCharts();
+  setScenario('base');
+  renderHeatmap();
+  const input = document.getElementById('pw-input');
+  if (input) {
+    input.focus();
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') unlockDashboard();
+    });
+  }
 });
 </script>
 </body>
