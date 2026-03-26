@@ -82,6 +82,125 @@
   .basis-item h4 { font-size: 13px; margin-bottom: 8px; }
   .basis-item p { font-size: 12px; color: var(--text2); line-height: 1.8; }
   .basis-footnote { margin-top: 14px; font-size: 12px; color: var(--text2); line-height: 1.8; }
+  /* 成長率要因メモ */
+  .growth-factor-wrap { margin-top: 18px; }
+  .growth-factor-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .growth-factor-subtitle { font-size: 12px; color: var(--text2); line-height: 1.8; margin-bottom: 12px; }
+  .growth-factor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .growth-factor-item {
+    background: linear-gradient(180deg, rgba(30,41,59,.96) 0%, rgba(22,31,46,.96) 100%);
+    border: 1px solid var(--border);
+    border-left: 4px solid #38bdf8;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 6px 18px rgba(2,6,23,.16);
+  }
+  .growth-factor-item.future {
+    border-left-color: #94a3b8;
+    border-style: dashed;
+  }
+  .growth-factor-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .growth-factor-year {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: .02em;
+  }
+  .growth-factor-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    background: rgba(15,23,42,.45);
+  }
+  .growth-factor-body {
+    display: grid;
+    gap: 8px;
+  }
+  .growth-factor-row {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 8px 0;
+    border-top: 1px solid rgba(148,163,184,.14);
+  }
+  .growth-factor-row:first-child { border-top: 0; padding-top: 0; }
+  .growth-factor-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    background: rgba(59,130,246,.18);
+    color: #dbeafe;
+    border: 1px solid rgba(59,130,246,.22);
+  }
+  .growth-factor-row.group .growth-factor-tag {
+    background: rgba(34,197,94,.14);
+    color: #dcfce7;
+    border-color: rgba(34,197,94,.2);
+  }
+  .growth-factor-text {
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+  .growth-note-box {
+    margin-top: 14px;
+    background: rgba(15,23,42,.5);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .growth-note-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .growth-note-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+  }
+  .growth-note-item {
+    background: rgba(30,41,59,.55);
+    border: 1px solid rgba(148,163,184,.12);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+  .growth-note-item strong { color: var(--text); }
+  .growth-note-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 7px;
+    margin-bottom: 6px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fde68a;
+    background: rgba(245,158,11,.14);
+    border: 1px solid rgba(245,158,11,.18);
+  }
   footer { text-align: center; padding: 24px; font-size: 12px; color: var(--text2); border-top: 1px solid var(--border); margin-top: 32px; }
   /* パスワードゲート */
   #app { display: none; }
@@ -161,6 +280,34 @@
         <span><span class="legend-dot" style="background:#22c55e;border-top:2px dashed;"></span>上振れ</span>
       </div>
       <canvas id="salesChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>業界とD’ステーションの伸び方比較（2021=100）</h3>
+      <div class="chart-legend">
+        <span><span class="legend-dot" style="background:#f59e0b;"></span>矢野経済研究所（2024まで）</span>
+        <span><span class="legend-dot" style="background:repeating-linear-gradient(to right, #f59e0b 0 8px, transparent 8px 14px);"></span>矢野経済研究所（2025以降参考線）</span>
+        <span><span class="legend-dot" style="background:#38bdf8;"></span>D’ステーション（2025まで）</span>
+        <span><span class="legend-dot" style="background:repeating-linear-gradient(to right, #38bdf8 0 8px, transparent 8px 14px);"></span>D’ステーション（2026以降予測）</span>
+      </div>
+      <canvas id="growthChart"></canvas>
+      <div id="growth-factor-wrap" class="growth-factor-wrap">
+        <div class="growth-factor-title">上下変動の主な要因（業界ネタ / 自グループ要因）</div>
+        <div class="growth-factor-subtitle">2021〜2024は実績要因、2025以降は予測前提です。何があったかだけを短く拾える形に整理しています。</div>
+        <div id="growth-factor-grid" class="growth-factor-grid"></div>
+      </div>
+      <div class="growth-note-box">
+        <div class="growth-note-title">グラフの見方</div>
+        <div class="growth-note-grid">
+          <div class="growth-note-item">
+            <div class="growth-note-label">矢野</div>
+            2024年までは実績、2025年以降は公開資料をつないだ参考線です。<strong>2024=100 → 2030=93</strong>の中立ケースを2021=100へ換算しています。
+          </div>
+          <div class="growth-note-item">
+            <div class="growth-note-label">出典</div>
+            矢野経済研究所の公表値は <strong>2021年度 +24.3％、2022年度 +3.4％、2023年度 +14.6％、2024年度 ▲2.4％</strong> を使用しています。
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -7994,6 +8141,163 @@ function renderKPI() {
 }
 
 let salesChart;
+let growthChart;
+const YANO_GROWTH_RATES = {
+  2021: 24.3,
+  2022: 3.4,
+  2023: 14.6,
+  2024: -2.4,
+};
+const YANO_MID_FORECAST_BASIS = {
+  halls2030Index: 83.5,
+  machines2030Index: 92.6,
+  population2030Index: 97.0,
+  sales2030IndexNeutral: 93.0,
+  lineType: '2024=100、2030=93の中立ケース指数を2021=100へ換算した参考線',
+};
+const YANO_SALES_INDEX_REFERENCE = {
+  2024: 100.0,
+  2025: 99.0,
+  2026: 98.0,
+  2027: 97.0,
+  2028: 95.0,
+  2029: 94.0,
+  2030: 93.0,
+};
+const YANO_GROWTH_REFERENCE = {
+  2024: -2.4,
+  2025: -1.0,
+  2026: -1.0,
+  2027: -1.0,
+  2028: -2.1,
+  2029: -1.1,
+  2030: -1.1,
+};
+const YANO_INDEX_REFERENCE = {
+  2021: 100.0,
+  2022: 103.4,
+  2023: 118.5,
+  2024: 115.7,
+  2025: 114.5,
+  2026: 113.3,
+  2027: 112.2,
+  2028: 109.9,
+  2029: 108.7,
+  2030: 107.6,
+};
+
+const GROWTH_FACTOR_NOTES = {
+  2021: {
+    type: 'hist',
+    industry: '新規則機移行に伴う遊技機の入替特需で、関連機器市場が大きく拡大。',
+    group: '自グループ側は新店寄与よりも、既存店の回復色が強い年。'
+  },
+  2022: {
+    type: 'hist',
+    industry: 'スマート遊技機の導入開始に伴い、新たな設備機器需要が発生。',
+    group: '2022年12月に高崎本店グランドオープン。'
+  },
+  2023: {
+    type: 'hist',
+    industry: 'スマスロ導入の本格化で、ホール売上・関連機器需要とも持ち直し。',
+    group: '3月に門司・大淀、4月に羽生・延岡・大分本店・南大分、12月に松橋インターがグランドオープン。'
+  },
+  2024: {
+    type: 'hist',
+    industry: '前年の反動で機器市場は前年割れ。パチスロ機市場は4年ぶり減、小ロット化も進行。',
+    group: '2024年8月に39八代店グランドオープン。'
+  },
+  2025: {
+    type: 'future',
+    industry: '2024の持ち直し後、2025以降はゆるやかな減少を想定。',
+    group: '2025年に東金店グランドオープン。'
+  },
+  2026: {
+    type: 'future',
+    industry: '市場縮小圧力が継続。'
+  },
+  2027: {
+    type: 'future',
+    industry: '売上指数は98→97。'
+  },
+  2028: {
+    type: 'future',
+    industry: '売上指数は97→95。2028年はホール数5,900店舗・設置台数308.4万台予測。'
+  },
+  2029: {
+    type: 'future',
+    industry: '売上指数は95→94。'
+  },
+  2030: {
+    type: 'future',
+    industry: '売上指数は94→93。'
+  }
+};
+
+function getGrowthFactorNote(year, sc = currentSc) {
+  const note = GROWTH_FACTOR_NOTES[year];
+  if (!note) return { type: 'future', industry: '', group: '' };
+  return {
+    type: note.type || 'hist',
+    industry: note.industry || '',
+    group: note.group || ''
+  };
+}
+
+function renderGrowthFactors() {
+  const grid = document.getElementById('growth-factor-grid');
+  if (!grid) return;
+  const years = ALL_YEARS.slice(1);
+  grid.innerHTML = years.map(year => {
+    const note = getGrowthFactorNote(year, currentSc);
+    const badge = note.type === 'future' ? '予測前提' : '実績要因';
+    const groupRow = note.group ? `
+          <div class="growth-factor-row group">
+            <div class="growth-factor-tag">自G</div>
+            <div class="growth-factor-text">${note.group}</div>
+          </div>` : '';
+    return `
+      <div class="growth-factor-item ${note.type === 'future' ? 'future' : ''}">
+        <div class="growth-factor-head">
+          <div class="growth-factor-year">${year}</div>
+          <span class="growth-factor-badge">${badge}</span>
+        </div>
+        <div class="growth-factor-body">
+          <div class="growth-factor-row">
+            <div class="growth-factor-tag">業界</div>
+            <div class="growth-factor-text">${note.industry}</div>
+          </div>
+          ${groupRow}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function yoyRate(curr, prev) {
+  if (!(curr > 0) || !(prev > 0)) return null;
+  return +(((curr / prev) - 1) * 100).toFixed(1);
+}
+function getGrowthSourceValue(year, sc = currentSc) {
+  if (year <= 2025) return RAW.totals?.[year]?.actual?.sales ?? 0;
+  return RAW.totals?.[year]?.[sc]?.sales ?? 0;
+}
+function getDsGrowthData(sc = currentSc) {
+  return ALL_YEARS.slice(1).map(year => {
+    const prevYear = year - 1;
+    const curr = getGrowthSourceValue(year, sc);
+    const prev = getGrowthSourceValue(prevYear, sc);
+    return yoyRate(curr, prev);
+  });
+}
+function getDsIndexData(sc = currentSc) {
+  const base = getGrowthSourceValue(2021, sc);
+  return ALL_YEARS.slice(1).map(year => {
+    const value = getGrowthSourceValue(year, sc);
+    if (!(base > 0) || !(value > 0)) return null;
+    return +((value / base) * 100).toFixed(1);
+  });
+}
+
 function buildCharts() {
   const labels = ALL_YEARS.map(String);
   // 過去実績ライン (2020-2025)
@@ -8039,10 +8343,119 @@ function buildCharts() {
       }
     }
   });
+
+  const growthLabels = ALL_YEARS.slice(1).map(String);
+  const dsIndexData = getDsIndexData(currentSc);
+  const yanoActualData = ALL_YEARS.slice(1).map(year => year <= 2024 ? (YANO_INDEX_REFERENCE[year] ?? null) : null);
+  const yanoFutureData = ALL_YEARS.slice(1).map(year => year >= 2024 ? (YANO_INDEX_REFERENCE[year] ?? null) : null);
+  const dsActualData = ALL_YEARS.slice(1).map((year, idx) => year <= 2025 ? dsIndexData[idx] : null);
+  const dsFutureData = ALL_YEARS.slice(1).map((year, idx) => year >= 2025 ? dsIndexData[idx] : null);
+  const growthCtx = document.getElementById('growthChart').getContext('2d');
+  growthChart = new Chart(growthCtx, {
+    type: 'line',
+    data: {
+      labels: growthLabels,
+      datasets: [
+        {
+          label: '矢野経済研究所（2024まで）',
+          data: yanoActualData,
+          borderColor: '#f59e0b',
+          backgroundColor: 'rgba(245,158,11,.08)',
+          tension: 0.25,
+          fill: false,
+          pointRadius: 4,
+          pointBackgroundColor: '#f59e0b',
+          spanGaps: false
+        },
+        {
+          label: '矢野経済研究所（2025以降参考線）',
+          data: yanoFutureData,
+          borderColor: '#f59e0b',
+          backgroundColor: 'transparent',
+          tension: 0.25,
+          fill: false,
+          pointRadius: 4,
+          pointBackgroundColor: '#f59e0b',
+          borderDash: [7, 5],
+          spanGaps: false
+        },
+        {
+          label: 'D’ステーション（2025まで）',
+          data: dsActualData,
+          borderColor: '#38bdf8',
+          backgroundColor: 'transparent',
+          tension: 0.3,
+          fill: false,
+          pointRadius: 4,
+          pointBackgroundColor: '#38bdf8',
+          spanGaps: false
+        },
+        {
+          label: `D’ステーション（2026以降予測・${scenarioLabel(currentSc)}）`,
+          data: dsFutureData,
+          borderColor: '#38bdf8',
+          backgroundColor: 'transparent',
+          tension: 0.3,
+          fill: false,
+          pointRadius: 4,
+          pointBackgroundColor: '#38bdf8',
+          borderDash: [7, 5],
+          spanGaps: false
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: '#e2e8f0', font: { size: 12 } } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}`,
+            afterBody: (items) => {
+              const year = Number(items?.[0]?.label);
+              const note = getGrowthFactorNote(year, currentSc);
+              if (!year || (!note.industry && !note.group)) return [];
+              const lines = ['', `業界 ${note.industry}`];
+              if (note.group) lines.push(`自G ${note.group}`);
+              return lines;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: (ctx) => {
+              const yr = Number(growthLabels[ctx.index]);
+              return yr <= 2024 ? '#fcd34d' : yr === 2025 ? '#e2e8f0' : '#93c5fd';
+            }
+          },
+          grid: { color: '#1e293b' }
+        },
+        y: {
+          ticks: {
+            color: '#94a3b8'
+          },
+          grid: { color: '#334155' },
+          title: { display: true, text: '指数（2021=100）', color: '#94a3b8' }
+        }
+      }
+    }
+  });
+
+  renderGrowthFactors();
 }
 
 function updateCharts() {
   document.getElementById('hm-title').innerText = `売上ヒートマップ（2020〜2030年度・${scenarioLabel(currentSc)})`;
+  if (growthChart) {
+    const dsIndexData = getDsIndexData(currentSc);
+    growthChart.data.datasets[2].data = ALL_YEARS.slice(1).map((year, idx) => year <= 2025 ? dsIndexData[idx] : null);
+    growthChart.data.datasets[3].label = `D’ステーション（2026以降予測・${scenarioLabel(currentSc)}）`;
+    growthChart.data.datasets[3].data = ALL_YEARS.slice(1).map((year, idx) => year >= 2025 ? dsIndexData[idx] : null);
+    growthChart.update();
+  }
+  renderGrowthFactors();
 }
 
 let tableRows = [];
